@@ -1,26 +1,23 @@
+// src/components/CatAnimation/CatAnimation.tsx
 import React from 'react';
+
+import catAnimationGif from '/idle.gif';
 
 interface CatAnimationProps {
     children?: React.ReactNode;
 }
 
-const CatAnimation: React.FC<CatAnimationProps> = ({ children }) => {
+const CatAnimation: React.FC<CatAnimationProps> = () => {
     return (
-        <div className="fixed inset-0 pointer-events-none z-50">
-            {/* Cat animation - click-through and see-through */}
-            <div className="absolute top-4 left-4 w-16 h-16 opacity-70">
-                <div className="animate-bounce text-4xl">
-                    🐱
-                </div>
-            </div>
-
-            {/* Render children with click-through */}
-            {children && (
-                <div className="pointer-events-none">
-                    {children}
-                </div>
-            )}
+        <div className="absolute top-8 w-12 h-12 z-50">
+            <img
+                src={catAnimationGif}
+                alt="Animated Cat"
+                className="w-full h-full object-contain"
+            />
         </div>
+
+
     );
 };
 

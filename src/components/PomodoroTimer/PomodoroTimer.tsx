@@ -24,11 +24,13 @@ const PomodoroTimer: React.FC = () => {
                     setSeconds(0);
                 }
             }, 1000);
-        } else if (!isActive && seconds !== 0) {
-            clearInterval(interval!);
+        } else if (!isActive && seconds !== 0 && interval) { // Ensure interval exists before clearing
+            clearInterval(interval);
         }
 
-        return () => clearInterval(interval!);
+        return () => {
+            if (interval) clearInterval(interval);
+        };
     }, [isActive, seconds, minutes, mode]);
 
     const toggleTimer = () => {
@@ -42,27 +44,27 @@ const PomodoroTimer: React.FC = () => {
     };
 
     return (
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+        <div className="bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-md w-full h-full flex flex-col justify-center items-center">
             <div className="text-center">
-                <h2 className="text-xl font-bold mb-4 text-gray-800">
+                <h2 className="text-sm font-bold mb-1 text-gray-800">
                     {mode === 'work' ? '🍅 Work Time' : '☕ Break Time'}
                 </h2>
 
-                <div className="text-6xl font-mono font-bold text-red-500 mb-6">
+                <div className="text-4xl font-mono font-bold text-red-500 mb-2">
                     {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
                 </div>
 
-                <div className="flex justify-center space-x-4">
+                <div className="flex justify-center space-x-2">
                     <button
                         onClick={toggleTimer}
-                        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                        className="px-3 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
                     >
                         {isActive ? '⏸️ Pause' : '▶️ Start'}
                     </button>
 
                     <button
                         onClick={resetTimer}
-                        className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                        className="px-3 py-1 text-xs bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
                     >
                         🔄 Reset
                     </button>

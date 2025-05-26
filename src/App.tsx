@@ -1,3 +1,4 @@
+// src/App.tsx
 import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
 import { useEffect } from 'react';
 import CatAnimation from './components/CatAnimation/CatAnimation';
@@ -11,13 +12,16 @@ function App() {
     const moveToCorner = async () => {
       try {
         const appWindow = getCurrentWindow();
-        // Get the current screen size using window.screen
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
 
-        const x = screenWidth - 400; // Use your configured width
-        const y = screenHeight - 300; // Use your configured height
-        await appWindow.setPosition(new LogicalPosition(x, y));
+        const windowWidth = 600;
+        const windowHeight = 300;
+
+        const x = screenWidth;
+        const y = screenHeight;
+
+        await appWindow.setPosition(new LogicalPosition(Math.max(0, x), Math.max(0, y)));
       } catch (error) {
         console.error('Error positioning window:', error);
       }
@@ -26,30 +30,37 @@ function App() {
     moveToCorner();
   }, []);
 
+  // Cat's bottom visual edge is at 5rem (top-4 + h-16 = 1rem + 4rem).
+  // Let the widget start at 4.5rem (72px) to have the cat sit slightly on top.
+  const WIDGET_TOP_OFFSET_REM = "4.5rem";
+
   return (
     <>
-      {/* Cat Animation Layer - Click-through and see-through */}
       <CatAnimation />
-
-      <div className="relative z-10 h-screen flex flex-col p-4">
-        {/* Top Section - Settings in top right */}
-        <div className="flex justify-end mb-4">
+      <div
+        className="absolute left-2 right-2 bottom-2 flex flex-col p-2 bg-pink-100/70 backdrop-blur-md rounded-xl"
+        style={{ top: WIDGET_TOP_OFFSET_REM }}
+      >
+        <div className="flex justify-end mb-1">
           <Settings />
         </div>
 
-        {/* Main Content - Timer on left, Notes/Music on right */}
-        {/* Changed items-center to items-stretch */}
-        <div className="flex-1 flex items-stretch space-x-4">
-          {/* Left Side - Pomodoro Timer */}
-          {/* This column will take up most of the width due to flex-1 */}
+        {/* Main Content Area */}
+        {/* Reduced space-x-4 to space-x-2 (0.5rem) */}
+        <div className="flex-1 flex items-stretch space-x-2">
+          {/* Left Column - Pomodoro Timer */}
+          {/* Removed p-1, let PomodoroTimer manage its internal padding */}
           <div className="flex-1 flex items-center justify-center">
             <PomodoroTimer />
           </div>
-          <div className="flex flex-col w-1/3 space-y-4">
-            <div className="flex-1">
+
+          {/* Right Column - Notes and Music */}
+          {/* Reduced space-y-4 to space-y-1 (0.25rem) */}
+          <div className="flex-1 flex flex-col space-y-1">
+            <div className="flex-1 min-h-0"> {/* Added min-h-0 to allow shrinking */}
               <Notes />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-h-0"> {/* Added min-h-0 to allow shrinking */}
               <Music />
             </div>
           </div>
