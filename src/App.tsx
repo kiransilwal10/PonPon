@@ -1,50 +1,61 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
+import { useEffect } from 'react';
+import CatAnimation from './components/CatAnimation/CatAnimation';
+import Music from './components/Music/Music';
+import Notes from './components/Notes/Notes';
+import PomodoroTimer from './components/PomodoroTimer/PomodoroTimer';
+import Settings from './components/Settings/Settings';
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  useEffect(() => {
+    const moveToCorner = async () => {
+      try {
+        const appWindow = getCurrentWindow();
+        // Get the current screen size using window.screen
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+        const x = screenWidth - 400; // Use your configured width
+        const y = screenHeight - 300; // Use your configured height
+        await appWindow.setPosition(new LogicalPosition(x, y));
+      } catch (error) {
+        console.error('Error positioning window:', error);
+      }
+    };
+
+    moveToCorner();
+  }, []);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    <>
+      {/* Cat Animation Layer - Click-through and see-through */}
+      <CatAnimation />
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="relative z-10 h-screen flex flex-col p-4">
+        {/* Top Section - Settings in top right */}
+        <div className="flex justify-end mb-4">
+          <Settings />
+        </div>
+
+        {/* Main Content - Timer on left, Notes/Music on right */}
+        {/* Changed items-center to items-stretch */}
+        <div className="flex-1 flex items-stretch space-x-4">
+          {/* Left Side - Pomodoro Timer */}
+          {/* This column will take up most of the width due to flex-1 */}
+          <div className="flex-1 flex items-center justify-center">
+            <PomodoroTimer />
+          </div>
+          <div className="flex flex-col w-1/3 space-y-4">
+            <div className="flex-1">
+              <Notes />
+            </div>
+            <div className="flex-1">
+              <Music />
+            </div>
+          </div>
+        </div>
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    </>
   );
 }
 

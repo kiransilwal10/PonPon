@@ -12,13 +12,13 @@
   "app": {
     "windows": [
       {
-        "title": "ponpon",
-        "width": 280,
-    "height": 180,
-    "decorations": false,         
-    "transparent": true        
-         
-  
+        "title": "PonPon - Pomodoro Timer",
+        "width": 800,
+        "height": 300,
+        "decorations": false,
+        "transparent": true,
+        "resizable": false,
+        "alwaysOnTop": true
       }
     ],
     "security": {
