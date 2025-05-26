@@ -13,7 +13,7 @@
     "windows": [
       {
         "title": "PonPon - Pomodoro Timer",
-        "width": 600,
+        "width": 400,
         "height": 300,
         "shadow": false,
         "decorations": false,
